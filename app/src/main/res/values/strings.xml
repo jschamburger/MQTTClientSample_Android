@@ -8,6 +8,8 @@
     <string name="button_prefill_text">Prefill</string>
     <string name="button_clean_text">Clean</string>
 
+    <string name="checkbox_led">LED</string>
+
     <string name="server_uri_text">Server URI</string>
     <string name="client_id_text">Client ID</string>
     <string name="username_text">Username</string>

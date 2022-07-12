@@ -60,68 +60,11 @@ class ClientFragment : Fragment() {
         val username    = arguments?.getString(MQTT_USERNAME_KEY)
         val pwd         = arguments?.getString(MQTT_PWD_KEY)
 
-        // Check if passed arguments are valid
-        if (    serverURI   != null    &&
-                clientId    != null    &&
-                username    != null    &&
-                pwd         != null        ) {
-            // Open MQTT Broker communication
-            mqttClient = MQTTClient(context, serverURI, clientId)
+        // TODO: Open MQTT Broker communication
 
-            // Connect and login to MQTT Broker
-            mqttClient.connect( username,
-                    pwd,
-                    object : IMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            Log.d(this.javaClass.name, "Connection success")
+        // TODO: Connect and login to MQTT Broker
 
-                            Toast.makeText(context, "MQTT Connection success", Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                            Log.d(this.javaClass.name, "Connection failure: ${exception.toString()}")
-
-                            Toast.makeText(context, "MQTT Connection fails: ${exception.toString()}", Toast.LENGTH_SHORT).show()
-
-                            // Come back to Connect Fragment
-                            findNavController().navigate(R.id.action_ClientFragment_to_ConnectFragment)
-                        }
-                    },
-                    object : MqttCallback {
-                        override fun messageArrived(topic: String?, message: MqttMessage?) {
-                            val msg = "Receive message: ${message.toString()} from topic: $topic"
-                            Log.d(this.javaClass.name, msg)
-
-                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun connectionLost(cause: Throwable?) {
-                            Log.d(this.javaClass.name, "Connection lost ${cause.toString()}")
-                        }
-
-                        override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                            Log.d(this.javaClass.name, "Delivery complete")
-                        }
-                    })
-        } else {
-            // Arguments are not valid, come back to Connect Fragment
-            findNavController().navigate(R.id.action_ClientFragment_to_ConnectFragment)
-        }
-
-        view.findViewById<Button>(R.id.button_prefill_client).setOnClickListener {
-            // Set default values in edit texts
-            view.findViewById<EditText>(R.id.edittext_pubtopic).setText(MQTT_TEST_TOPIC)
-            view.findViewById<EditText>(R.id.edittext_pubmsg).setText(MQTT_TEST_MSG)
-            view.findViewById<EditText>(R.id.edittext_subtopic).setText(MQTT_TEST_TOPIC)
-        }
-
-        view.findViewById<Button>(R.id.button_clean_client).setOnClickListener {
-            // Clean values in edit texts
-            view.findViewById<EditText>(R.id.edittext_pubtopic).setText("")
-            view.findViewById<EditText>(R.id.edittext_pubmsg).setText("")
-            view.findViewById<EditText>(R.id.edittext_subtopic).setText("")
-        }
-
+        // Disconnect button
         view.findViewById<Button>(R.id.button_disconnect).setOnClickListener {
             if (mqttClient.isConnected()) {
                 // Disconnect from MQTT Broker
@@ -144,75 +87,10 @@ class ClientFragment : Fragment() {
             }
         }
 
-        view.findViewById<Button>(R.id.button_publish).setOnClickListener {
-            val topic   = view.findViewById<EditText>(R.id.edittext_pubtopic).text.toString()
-            val message = view.findViewById<EditText>(R.id.edittext_pubmsg).text.toString()
+        // TODO: publish message
 
-            if (mqttClient.isConnected()) {
-                mqttClient.publish(topic,
-                                    message,
-                                    1,
-                                    false,
-                                    object : IMqttActionListener {
-                                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                                            val msg ="Publish message: $message to topic: $topic"
-                                            Log.d(this.javaClass.name, msg)
+        // TODO: subscribe to topic
 
-                                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                                        }
-
-                                        override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                                            Log.d(this.javaClass.name, "Failed to publish message to topic")
-                                        }
-                                    })
-            } else {
-                Log.d(this.javaClass.name, "Impossible to publish, no server connected")
-            }
-        }
-
-        view.findViewById<Button>(R.id.button_subscribe).setOnClickListener {
-            val topic   = view.findViewById<EditText>(R.id.edittext_subtopic).text.toString()
-
-            if (mqttClient.isConnected()) {
-                mqttClient.subscribe(topic,
-                        1,
-                        object : IMqttActionListener {
-                            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                                val msg = "Subscribed to: $topic"
-                                Log.d(this.javaClass.name, msg)
-
-                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                                Log.d(this.javaClass.name, "Failed to subscribe: $topic")
-                            }
-                        })
-            } else {
-                Log.d(this.javaClass.name, "Impossible to subscribe, no server connected")
-            }
-        }
-
-        view.findViewById<Button>(R.id.button_unsubscribe).setOnClickListener {
-            val topic   = view.findViewById<EditText>(R.id.edittext_subtopic).text.toString()
-
-            if (mqttClient.isConnected()) {
-                mqttClient.unsubscribe( topic,
-                        object : IMqttActionListener {
-                            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                                val msg = "Unsubscribed to: $topic"
-                                Log.d(this.javaClass.name, msg)
-
-                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                                Log.d(this.javaClass.name, "Failed to unsubscribe: $topic")
-                            }
-                        })
-            } else {
-                Log.d(this.javaClass.name, "Impossible to unsubscribe, no server connected")
-            }
-        }
+        // TODO (optional): unsubscribe from topic
     }
 }
